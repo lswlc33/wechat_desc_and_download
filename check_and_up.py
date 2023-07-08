@@ -23,36 +23,34 @@ headers = {
 
 
 def check_error_link(url):
+    # 返回1是链接正确
     response = requests.head(url=url, headers=headers)
     if response.status_code != 200:
-        # print("error_url " + url)
         return 0
     return 1
 
 
 def check_update(url):
-    r_code = 200
+    result = 1
     num = 1
 
     # 制作新链接
     if re.search(r'_\d+\.apk$', url):
         num = int(re.search(r'(\d+)\.apk$', url).group(1)) + 1
-        url = url[:-6] + "_{}.apk"
+        f_url = url[:-6] + "_{}.apk"
     else:
-        url = url[:-4] + "_{}.apk"
+        f_url = url[:-4] + "_{}.apk"
 
     # 测试链接
-    while r_code == 200:
-        new_url = url.format(num)
-        r_code = requests.head(url=new_url, headers=headers).status_code
-        if r_code == 200:
+    while result:
+        new_url = f_url.format(num)
+        result = check_error_link(new_url)
+        if result:
             num += 1
-            # print("Succeed " + new_url)
-            return new_url
-        else:
-            # print("Failed " + new_url)
-            return 0
+            url = new_url
+    return url
 
 
 if __name__ == '__main__':
-    pass
+    print(check_error_link("https://dldir1.qq.com/weixin/android/weixin8019android2080.apk"))
+    print(check_update("https://dldir1.qq.com/weixin/android/weixin809android1940.apk"))
