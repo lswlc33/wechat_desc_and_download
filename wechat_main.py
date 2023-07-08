@@ -64,8 +64,6 @@ def section_choose(section_list, key, page):
         section_choose(ver_list, c_key, c_page)
 
 
-
-
 if __name__ == '__main__':
     ver_list = get_list()
     section_choose(ver_list, 0, 0)

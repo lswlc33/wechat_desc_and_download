@@ -2,7 +2,7 @@
 # 耗时比较长,可能要半小时
 # 结果最后将在终端呈现（划掉）
 # 最后结果将在download_links.py呈现
-
+import pprint
 from datetime import datetime
 from check_and_up import *
 
@@ -54,13 +54,15 @@ def run():
 
     # 这里是查找范围
     run_get_link(700, 710, 1380)
-    run_get_link(7010, 7023, 1580)
-    run_get_link(800, 810, 1840)
-    run_get_link(8010, 8039, 1960)
+    # run_get_link(7010, 7023, 1580)
+    # run_get_link(800, 810, 1840)
+    # run_get_link(8010, 8039, 1960)
 
-    print("结果来咯")
-    for i in result_list:
-        print(i, result_list[i])
+    with open('download_links.py', 'w') as file:
+        file.write("links = [\n")
+        for key, value in result_list.items():
+            file.write(f"    ['{key}', '{value}'],\n")
+        file.write("]\n")
 
 
 if __name__ == '__main__':
