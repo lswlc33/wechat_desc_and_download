@@ -1,9 +1,11 @@
 # 本脚本包括获取版本列表和版本更新日志
 # 还包括查找下载链接
+import os
 
-import requests
 from lxml import etree
+
 import download_links
+from check_and_up import *
 
 headers = {
     'authority': 'weixin.qq.com',
@@ -57,26 +59,48 @@ def get_desc(desc_link):
 
         desc += "{}\n".format(text[0])
 
-    desc += "{}\n".format(1)
+    desc += "\n"
 
     return desc
 
 
 def search_for_download_link(ver):
+    ver = ver.replace(".", "")
     download_link = ''
-    links_32 = download_links.links_32
-    links_64 = download_links.links_64
+    links_32 = download_links.links
 
     # 查找下载链接
-    # 低版本-找不到-找得到
+    # 低版本-找不到
+    if int(ver[0]) < 7:
+        return "过旧版本已经无法登录，暂不提供下载"
+    found_link = None
+    for link in links_32:
+        if link[0] == ver:
+            found_link = link[1]
+            break
+
+    if not found_link:
+        return "没找到相关下载链接"
+
     # 找32位
+    download_link += print_download_link(found_link, "32位")
     # 找64位
-
-
+    if "_" in found_link:
+        found_link = found_link.replace("_", "_arm64_")
+    else:
+        found_link = found_link.replace(".apk", "_arm64.apk")
+    if check_error_link(found_link):
+        download_link += print_download_link(found_link, "64位")
 
     return download_link
 
 
+def print_download_link(link, text):
+    url = link
+    os.system('cls')
+    out = f'{text}: \033]8;;{url}\033\\按住CRTL点击下载\033]8;;\033\\\n'
+    return out
+
+
 if __name__ == '__main__':
-    print(get_desc("https://weixin.qq.com/cgi-bin/readtemplate?"
-                   "lang=zh_CN&t=page/faq/android/7015/index&faq=android_7015"))
+    print(search_for_download_link("8.0.38"))
