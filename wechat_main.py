@@ -54,21 +54,16 @@ def section_choose(section_list, key, page):
             print("当前版本:{}  发布时间:{}\n"
                   "更新日志:\n\n"
                   "{}\n"
-                  "{}\n"
+                  "下载地址:\n\n{}"
+                  "\n"
                   .format(section_list[c_num][0],
                           section_list[c_num][1][1:-1],
                           ver_desc,
-                          search_for_download_link(section_list[c_num][2])))
+                          search_for_download_link(section_list[c_num][0])))
             os.system("pause")
         section_choose(ver_list, c_key, c_page)
 
 
-def print_download_link(text, link):
-    text = text
-    url = link
-    os.system('cls')
-    out = f'下载地址:\033]8;;{url}\033\\点击下载\033]8;;\033\\'
-    print(out)
 
 
 if __name__ == '__main__':
